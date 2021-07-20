@@ -28,6 +28,8 @@ class CreateEmployeesTable extends Migration
             
             $table->foreign('idUser')->references('id')->on('users')->onDelete('cascade');
         });
+
+        
     }
 
     /**

@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//---Block
+Route::get('/list-blog', 'EmployeeController\BlogController@getBlog');
+Route::post('/list-blog', 'EmployeeController\BlogController@createBlog');
+Route::get('/blog/{id}', 'EmployeeController\BlogController@getBlogByID');
+Route::delete('/blog/{id}', 'EmployeeController\BlogController@deleteBlogByID');
+
+
 Route::post('/register', '_AuthController\RegisterController@register');
 
 // Route::middleware('auth:api')->get('/user', function (Request $request) {

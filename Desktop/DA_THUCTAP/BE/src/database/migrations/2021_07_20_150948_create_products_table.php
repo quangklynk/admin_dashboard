@@ -24,14 +24,12 @@ class CreateProductsTable extends Migration
             $table->string('avatar');
             $table->integer('view')->default('0');
             $table->unsignedInteger('idCategory');
-            $table->unsignedInteger('idDistributor');
             $table->boolean('flag')->default(1);
             $table->timestamps();
         });
 
         Schema::table('products', function (Blueprint $table) {
             $table->foreign('idCategory')->references('id')->on('categories')->onDelete('cascade');
-            $table->foreign('idDistributor')->references('id')->on('distributors')->onDelete('cascade');
         });
     }
 

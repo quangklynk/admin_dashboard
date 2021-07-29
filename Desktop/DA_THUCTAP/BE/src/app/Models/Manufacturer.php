@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Distrbutor extends Model
+class Manufacturer extends Model
 {
     //
 }

@@ -24,7 +24,6 @@ class CreateCustomersTable extends Migration
         });
 
         Schema::table('customers', function (Blueprint $table) {
-            
             $table->foreign('idUser')->references('id')->on('users')->onDelete('cascade');
         });
     }

@@ -4,13 +4,13 @@ namespace App\Http\Controllers\EmployeeController;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Blog;
+use App\Models\Status;
 use Illuminate\Support\Facades\DB;
 
-class BlogController extends Controller
+class StatusController extends Controller
 {
-    public function getBlog (){
-        $data = Blog::all();
+    public function getStatus (){
+        $data = Status::all();
         if($data){
             return response()->json(['status' => 'successful',
                                     'data' => $data]);
@@ -19,40 +19,35 @@ class BlogController extends Controller
                                     'messege' => 'Empty List']);
     }
 
-    public function createBlog(Request $request){
+    public function createStatus(Request $request){
         try {
-            $data = Blog::updateOrCreate(
+            DB::table('statuses')->updateOrInsert(
                 ['id' => $request->id],
                 [
-                    'image' => $request->image,
-                    'titleBlog' => $request->titleBlog,
-                    'content' => $request->content,
-                    'idEmployee' => $request->idEmployee,
+                    'description' => $request->image,
                  ],
             );
-            if($data){
-                return response()->json(['status' => 'successful',
-                                        'data' => $data]);
-            }
-        } catch (Exception $e) {
-            return  response()->json(['status' => 'failed1',
-                                    'messege' => 'Add Blog Faile']);
+            return response()->json(['status' => 'successful',
+                                     'messege' => 'Add Status Success']);
+        } catch (\Throwable $th) {
+            return  response()->json(['status' => 'failed',
+                                    'messege' => 'Add Status Failed']);
         }
     }
 
-    public function getBlogByID($id){
-        $data = Blog::where('id', $id)->first();
+    public function getStatusByID($id){
+        $data = Status::where('id', $id)->first();
         if($data){
             return response()->json(['status' => 'successful',
                                     'data' => $data]);
         }
         return  response()->json(['status' => 'failed',
-                                    'messege' => 'Empty Element']);
+                                'messege' => 'Empty Element']);
     }
 
-    public function deleteBlogByID($id){
+    public function deleteStatusByID($id){
         try {
-            DB::table('blogs')->where('id', $id)->delete();
+            DB::table('statuses')->where('id', $id)->delete();
             return response()->json(['status' => 'successful']);
         } catch (\Throwable $th) {
             return response()->json(['status' => 'failed',
@@ -60,9 +55,9 @@ class BlogController extends Controller
         }
     }
 
-    // public function deleteBlogByID($id){
+    // public function deleteStatusByID($id){
     //     try {
-    //         DB::table('blog')
+    //         DB::table('Status')
     //           ->where('id', $id)
     //           ->update(['flag' => 0]);
     //         return response()->json(['status' => 'successful']);

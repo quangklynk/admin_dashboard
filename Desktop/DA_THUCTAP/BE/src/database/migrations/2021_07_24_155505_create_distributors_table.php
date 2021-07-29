@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDistrbutorsTable extends Migration
+class CreateDistributorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,7 +16,9 @@ class CreateDistrbutorsTable extends Migration
         Schema::create('distributors', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->timestamps();
+            $table->string('address');
+            $table->string('phone', 13)->change();
+            $table->string('email');
         });
     }
 
@@ -27,6 +29,6 @@ class CreateDistrbutorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('distrbutors');
+        Schema::dropIfExists('distributors');
     }
 }

@@ -4,13 +4,13 @@ namespace App\Http\Controllers\EmployeeController;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Blog;
+use App\Models\Category;
 use Illuminate\Support\Facades\DB;
 
-class BlogController extends Controller
+class CategoryController extends Controller
 {
-    public function getBlog (){
-        $data = Blog::all();
+    public function getCategory (){
+        $data = Category::all();
         if($data){
             return response()->json(['status' => 'successful',
                                     'data' => $data]);
@@ -19,29 +19,26 @@ class BlogController extends Controller
                                     'messege' => 'Empty List']);
     }
 
-    public function createBlog(Request $request){
+    public function createCategory(Request $request){
         try {
-            $data = Blog::updateOrCreate(
+            DB::table('categories')->updateOrInsert(
                 ['id' => $request->id],
                 [
-                    'image' => $request->image,
-                    'titleBlog' => $request->titleBlog,
-                    'content' => $request->content,
-                    'idEmployee' => $request->idEmployee,
+                    'name' => $request->image,
+                    'idManufacturers' => $request->idManufacturers,
+                    'idDistributor' => $request->idDistributor,
                  ],
             );
-            if($data){
-                return response()->json(['status' => 'successful',
-                                        'data' => $data]);
-            }
-        } catch (Exception $e) {
-            return  response()->json(['status' => 'failed1',
-                                    'messege' => 'Add Blog Faile']);
+            return response()->json(['status' => 'successful',
+                                     'messege' => 'Add Category Success']);
+        } catch (\Throwable $th) {
+            return  response()->json(['status' => 'failed',
+                                    'messege' => 'Add Category Failed']);
         }
     }
 
-    public function getBlogByID($id){
-        $data = Blog::where('id', $id)->first();
+    public function getCategoryByID($id){
+        $data = Category::where('id', $id)->first();
         if($data){
             return response()->json(['status' => 'successful',
                                     'data' => $data]);
@@ -50,9 +47,9 @@ class BlogController extends Controller
                                     'messege' => 'Empty Element']);
     }
 
-    public function deleteBlogByID($id){
+    public function deleteCategoryByID($id){
         try {
-            DB::table('blogs')->where('id', $id)->delete();
+            DB::table('categories')->where('id', $id)->delete();
             return response()->json(['status' => 'successful']);
         } catch (\Throwable $th) {
             return response()->json(['status' => 'failed',

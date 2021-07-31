@@ -24,8 +24,11 @@ class LoginController extends Controller
             ->select('employees.id', 'users.flag', 'employees.name', 'roles.role_name')
             ->where('users.email', $request->email)
             ->first();
-            $user->token = $user->createToken('tokenCode')->accessToken;
-            return response()->json(['data' => $data, 'token' => $user->token]);
+
+            $tokenData = $user->createToken($user->email.'-'.now(), [$data->role_name]);
+            $user->accessToken = $tokenData->accessToken;
+
+            return response()->json(['data' => $data, 'token' => $user->accessToken]);
         }
 
         

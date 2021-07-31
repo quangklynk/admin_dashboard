@@ -20,11 +20,18 @@ class SlideController extends Controller
     }
 
     public function createSlide(Request $request){
+        $file = $request->file('image')->getClientOriginalName();
+        // $filename = pathinfo($file, PATHINFO_FILENAME);
+        $filename = date('Y_m_d_H_i_s');
+        $extension = pathinfo($file, PATHINFO_EXTENSION);
+        $filename = "NV_" .  $request->idEmployee .  $filename . "." . $extension;
+        $path = $request->file('image')->move(public_path("/image/slide"), $filename);
+
         try {
             DB::table('slides')->updateOrInsert(
                 ['id' => $request->id],
                 [
-                    'image' => $request->image,
+                    'image' => $filename,
                     'idEmployee' => $request->idEmployee
                  ],
             );

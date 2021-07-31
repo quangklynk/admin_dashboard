@@ -4,7 +4,7 @@ namespace App\Http\Controllers\EmployeeController;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Manufacture;
+use App\Models\Manufacturer;
 use Illuminate\Support\Facades\DB;
 
 

@@ -24,14 +24,14 @@ class StatusController extends Controller
             DB::table('statuses')->updateOrInsert(
                 ['id' => $request->id],
                 [
-                    'description' => $request->image,
+                    'description' => $request->description,
                  ],
             );
             return response()->json(['status' => 'successful',
                                      'messege' => 'Add Status Success']);
-        } catch (\Throwable $th) {
+        } catch (Exception $th) {
             return  response()->json(['status' => 'failed',
-                                    'messege' => 'Add Status Failed']);
+                                    'messege' => $th]);
         }
     }
 

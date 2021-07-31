@@ -21,20 +21,20 @@ Route::get('/blog/{id}', 'EmployeeController\BlogController@getBlogByID')->middl
 Route::delete('/blog/{id}', 'EmployeeController\BlogController@deleteBlogByID')->middleware('auth:api');
 
 //---Slide
-Route::get('/list-slide', 'EmployeeController\SlideController@getSlide');
-Route::post('/list-slide', 'EmployeeController\SlideController@createSlide');
+Route::get('/slide', 'EmployeeController\SlideController@getSlide');
+Route::post('/slide', 'EmployeeController\SlideController@createSlide');
 Route::get('/slide/{id}', 'EmployeeController\SlideController@getSlideByID');
 Route::delete('/slide/{id}', 'EmployeeController\SlideController@deleteSlideByID');
 
 //---Category 
-Route::get('/list-category', 'EmployeeController\CategoryController@getCategory');
-Route::post('/list-category', 'EmployeeController\CategoryController@createCategory');
+Route::get('/category', 'EmployeeController\CategoryController@getCategory');
+Route::post('/category', 'EmployeeController\CategoryController@createCategory');
 Route::get('/category/{id}', 'EmployeeController\CategoryController@getCategoryByID');
 Route::delete('/category/{id}', 'EmployeeController\CategoryController@deleteCategoryByID');
 
 //---Distributor 
-Route::get('/list-distributor', 'EmployeeController\DistributorController@getDistributor');
-Route::post('/list-distributor', 'EmployeeController\DistributorController@createDistributor');
+Route::get('/distributor', 'EmployeeController\DistributorController@getDistributor');
+Route::post('/distributor', 'EmployeeController\DistributorController@createDistributor');
 Route::get('/distributor/{id}', 'EmployeeController\DistributorController@getDistributorByID');
 Route::delete('/distributor/{id}', 'EmployeeController\DistributorController@deleteBlogByID');
 
@@ -51,16 +51,16 @@ Route::get('/product/{id}', 'EmployeeController\ProductController@getProductByID
 Route::delete('/product/{id}', 'EmployeeController\ProductController@deleteBlogByID');
 
 //---Status 
-Route::get('/list-status', 'EmployeeController\StatusController@getStatus');
-Route::post('/list-status', 'EmployeeController\StatusController@createStatus');
+Route::get('/status', 'EmployeeController\StatusController@getStatus');
+Route::post('/status', 'EmployeeController\StatusController@createStatus');
 Route::get('/status/{id}', 'EmployeeController\StatusController@getStatusByID');
 Route::delete('/status/{id}', 'EmployeeController\StatusController@deleteStatusByID');
 
 //---Manufacturer 
-Route::get('/manufacturer', 'EmployeeController\Manufacturer@getManufacturer');
-Route::post('/manufacturer', 'EmployeeController\Manufacturer@createManufacturer');
-Route::get('/manufacturer/{id}', 'EmployeeController\Manufacturer@getManufacturerByID');
-Route::delete('/manufacturer/{id}', 'EmployeeController\Manufacturer@deleteManufacturerByID');
+Route::get('/manufacturer', 'EmployeeController\ManufacturerController@getManufacturer');
+Route::post('/manufacturer', 'EmployeeController\ManufacturerController@createManufacturer');
+Route::get('/manufacturer/{id}', 'EmployeeController\ManufacturerController@getManufacturerByID');
+Route::delete('/manufacturer/{id}', 'EmployeeController\ManufacturerController@deleteManufacturerByID');
 
 Route::post('/register', '_AuthController\RegisterController@register');
 Route::post('/login', '_AuthController\LoginController@login');

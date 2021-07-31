@@ -10,7 +10,11 @@ use Illuminate\Support\Facades\DB;
 class CategoryController extends Controller
 {
     public function getCategory (){
-        $data = Category::all();
+        $data = DB::table('categories')
+            ->join('distributors', 'distributors.id', '=', 'categories.idDistributor')
+            ->join('manufacturers', 'manufacturers.id', '=', 'categories.idManufacturers')        
+            ->select('categories.id', 'categories.name', 'manufacturers.name as idManufacturers', 'distributors.name as idDistributor')
+            ->get();
         if($data){
             return response()->json(['status' => 'successful',
                                     'data' => $data]);
@@ -24,7 +28,7 @@ class CategoryController extends Controller
             DB::table('categories')->updateOrInsert(
                 ['id' => $request->id],
                 [
-                    'name' => $request->image,
+                    'name' => $request->name,
                     'idManufacturers' => $request->idManufacturers,
                     'idDistributor' => $request->idDistributor,
                  ],

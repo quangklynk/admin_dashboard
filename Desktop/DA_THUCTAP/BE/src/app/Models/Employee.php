@@ -9,4 +9,8 @@ class Employee extends Model
     protected $fillable = [
         'id', 'name', 'address', 'gender','image','idUser',
     ];
+
+    public function blog(){
+        return $this->hasMany(Blog::class, 'idEmployee', 'id');
+    }
 }

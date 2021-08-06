@@ -34,4 +34,11 @@ class LoginController extends Controller
         
         return response()->json(['email' => 'Sai ten truy cap hoac mat khau!'], 401);
     }
+
+    public function logout (Request $request) {
+        $request->user()->token()->revoke();
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ]);
+    }
 }//trả về quyền tên idnhân viên

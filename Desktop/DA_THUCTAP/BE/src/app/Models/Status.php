@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Status extends Model
 {
-    //
+    public function order(){
+        return $this->hasMany(Orders::class, 'idStatus', 'id');
+    }
 }

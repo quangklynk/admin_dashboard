@@ -24,7 +24,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     //---Slide
     Route::get('/slide', 'EmployeeController\SlideController@getSlide');
-    Route::post('/slide', 'EmployeeController\SlideController@createSlide');
+    Route::post('/slide', 'EmployeeController\SlideController@createSlide')->middleware('scope:admin,employee');
     Route::get('/slide/{id}', 'EmployeeController\SlideController@getSlideByID');
     Route::delete('/slide/{id}', 'EmployeeController\SlideController@deleteSlideByID');
 
@@ -64,10 +64,17 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('/manufacturer/{id}', 'EmployeeController\ManufacturerController@getManufacturerByID')->middleware('scope:admin');
     Route::delete('/manufacturer/{id}', 'EmployeeController\ManufacturerController@deleteManufacturerByID')->middleware('scope:admin');
 
+    //---Role 
+    Route::get('/role', 'EmployeeController\RoleController@getRole')->middleware('scope:admin');
+
+    //---Employee 
+    Route::get('/employee', 'EmployeeController\EmployeeController@getEmployee')->middleware('scope:admin');
+    Route::post('/register', '_AuthController\RegisterController@register')->middleware('scope:admin');
+    Route::delete('/employee/{id}', 'EmployeeController\EmployeeController@deleteEmployeeByID')->middleware('scope:admin');
 });
 
 
-Route::post('/register', '_AuthController\RegisterController@register');
+
 Route::post('/login', '_AuthController\LoginController@login');
 
 

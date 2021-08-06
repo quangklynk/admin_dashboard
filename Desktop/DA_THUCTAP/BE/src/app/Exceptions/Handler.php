@@ -50,6 +50,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof \Laravel\Passport\Exceptions\MissingScopeException) 
+        {
+          return response()->json(['message' => 'Đéo có quyền ok']); 
+          //abort(401); 
+        }
         return parent::render($request, $exception);
     }
 }

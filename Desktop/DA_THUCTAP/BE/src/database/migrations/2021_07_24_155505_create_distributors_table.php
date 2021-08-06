@@ -19,6 +19,7 @@ class CreateDistributorsTable extends Migration
             $table->string('address');
             $table->string('phone', 13)->change();
             $table->string('email');
+            $table->boolean('flag');
         });
     }
 

@@ -18,6 +18,7 @@ class CreateCategoriesTable extends Migration
             $table->string('name');
             $table->unsignedInteger('idManufacturers');
             $table->unsignedInteger('idDistributor');
+            $table->boolean('flag');
         });
         Schema::table('categories', function (Blueprint $table) {
             $table->foreign('idManufacturers')->references('id')->on('manufacturers')->onDelete('cascade');

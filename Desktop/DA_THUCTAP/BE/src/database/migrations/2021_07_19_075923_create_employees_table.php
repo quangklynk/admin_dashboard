@@ -19,7 +19,7 @@ class CreateEmployeesTable extends Migration
             $table->string('name');
             $table->string('phone', 10)->change();
             $table->string('address');
-            $table->unsignedInteger('gender');
+            $table->boolean('gender');
             $table->string('image');
             $table->unsignedInteger('idUser');
             $table->timestamps();

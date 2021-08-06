@@ -16,7 +16,6 @@ class CreateDetailEnterStickersTable extends Migration
         Schema::create('detail_enter_stickers', function (Blueprint $table) {
             $table->unsignedInteger('idSticker');
             $table->unsignedInteger('idProduct');
-            $table->unsignedInteger('idCategory');
             $table->integer('unit');
             $table->float('price');
             $table->primary(['idSticker', 'idProduct']);
@@ -25,7 +24,6 @@ class CreateDetailEnterStickersTable extends Migration
         Schema::table('detail_enter_stickers', function (Blueprint $table) {
             $table->foreign('idSticker')->references('id')->on('enter_stickers')->onDelete('cascade');
             $table->foreign('idProduct')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('idCategory')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 

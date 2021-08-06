@@ -11,6 +11,11 @@ class BlogController extends Controller
 {
     public function getBlog (){
         $data = Blog::all();
+
+        $data = DB::table('blogs')
+        ->join('employees', 'blogs.idEmployee', '=', 'employees.id')
+        ->select('blogs.id', 'blogs.image', 'employees.name as idEmployee', 'blogs.titleBlog', 'blogs.content')
+        ->get();
         if($data){
             return response()->json(['status' => 'successful',
                                     'data' => $data]);
@@ -21,16 +26,21 @@ class BlogController extends Controller
 
     public function createBlog(Request $request){
         try {
+            $file = $request->file('image')->getClientOriginalName();
+            $filename = date('Y_m_d_H_i_s');
+            $extension = pathinfo($file, PATHINFO_EXTENSION);
+            $filename = "NV_" . $request->idEmployee .  $filename . "." . $extension;
             $data = Blog::updateOrCreate(
                 ['id' => $request->id],
                 [
-                    'image' => $request->image,
+                    'image' => $filename,
                     'titleBlog' => $request->titleBlog,
                     'content' => $request->content,
                     'idEmployee' => $request->idEmployee,
                  ],
             );
             if($data){
+                $path = $request->file('image')->move(public_path("/image/blog"), $filename);
                 return response()->json(['status' => 'successful',
                                         'data' => $data]);
             }

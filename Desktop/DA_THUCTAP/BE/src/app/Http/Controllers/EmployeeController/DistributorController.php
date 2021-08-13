@@ -27,6 +27,7 @@ class DistributorController extends Controller
                     'name' => $request->name,
                     'address' => $request->address,
                     'email' => $request->email,
+                    'flag' => 1,
                 ],
             );
             return response()->json(['status' => 'successful',

@@ -21,17 +21,17 @@ class RoleController extends Controller
 
     public function createRole(Request $request){
         try {
-            DB::table('roles ')->updateOrInsert(
+            DB::table('roles')->updateOrInsert(
                 ['id' => $request->id],
                 [
                     'role_name' => $request->role_name,
                  ],
             );
             return response()->json(['status' => 'successful',
-                                     'messege' => 'Add Status Success']);
+                                     'messege' => 'Add Role Success']);
         } catch (\Throwable $th) {
             return  response()->json(['status' => 'failed',
-                                    'messege' => 'Add Status Failed']);
+                                    'messege' => 'Add Role Failed']);
         }
     }
 
@@ -47,8 +47,15 @@ class RoleController extends Controller
 
     public function deleteRoleByID($id){
         try {
-            DB::table('roles ')->where('id', $id)->delete();
-            return response()->json(['status' => 'successful']);
+            $check = DB::table('users')->where('idRole', $id)->count();
+            if ($check == 0 || $check == null){
+                DB::table('roles')->where('id', $id)->delete();
+                return response()->json(['status' => 'successful']);
+            }
+            else{
+                return response()->json(['status' => 'faile',
+                                        'error' => 'khong xoa duoc dau']);
+            }
         } catch (\Throwable $th) {
             return response()->json(['status' => 'failed',
                                      'error' => $th]);

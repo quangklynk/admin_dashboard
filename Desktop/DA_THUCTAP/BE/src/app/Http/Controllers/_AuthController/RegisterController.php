@@ -40,16 +40,12 @@ class RegisterController extends Controller
             $employee->save();
             
             DB::commit();
+            $path = $request->file('image')->move(public_path("/image/employee"), $filename);
             return response()->json(['status' => 'successful']);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['status' => 'failed',
                                      'error' => $e]);
         }
-
-        
-        $path = $request->file('image')->move(public_path("/image/emloyee"), $filename);
-
-        return response()->json(['status' => 'successful']);
     }
 }

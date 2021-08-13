@@ -26,6 +26,7 @@ class ManufacturerController extends Controller
                 ['id' => $request->id],
                 [
                     'name' => $request->name,
+                    'flag' => 1,
                  ],
             );
             return response()->json(['status' => 'successful',

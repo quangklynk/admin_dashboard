@@ -27,7 +27,7 @@ class EmployeeController extends Controller
     public function getEmployeeByID($id){
         $data = Employee::where('id', $id)->first();
         if($data){
-            return response()->json(['status' => 'successful',
+            return response()->json(['status' => 'nhân viên nè',
                                     'data' => $data]);
         }
         return  response()->json(['status' => 'failed',

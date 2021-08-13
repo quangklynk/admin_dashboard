@@ -65,15 +65,20 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::delete('/manufacturer/{id}', 'EmployeeController\ManufacturerController@deleteManufacturerByID')->middleware('scope:admin');
 
     //---Role 
-    Route::get('/role', 'EmployeeController\RoleController@getRole')->middleware('scope:admin');
+    Route::get('/role', '_AuthController\RoleController@getRole')->middleware('scope:admin');
+    Route::post('/role', '_AuthController\RoleController@createRole')->middleware('scope:admin');
+    Route::delete('/role/{id}', '_AuthController\RoleController@deleteRoleByID')->middleware('scope:admin');
+  
 
     //---Employee 
     Route::get('/employee', 'EmployeeController\EmployeeController@getEmployee')->middleware('scope:admin');
     Route::post('/register', '_AuthController\RegisterController@register')->middleware('scope:admin');
     Route::delete('/employee/{id}', 'EmployeeController\EmployeeController@deleteEmployeeByID')->middleware('scope:admin');
+    Route::get('/employee/{id}', 'EmployeeController\EmployeeController@getEmployeeByID')->middleware('scope:admin');
+
+    //---Logout
+    Route::post('/logout', '_AuthController\LoginController@logout');
 });
-
-
 
 Route::post('/login', '_AuthController\LoginController@login');
 

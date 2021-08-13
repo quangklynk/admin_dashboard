@@ -72,6 +72,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     //---Employee 
     Route::get('/employee', 'EmployeeController\EmployeeController@getEmployee')->middleware('scope:admin');
+    Route::post('/employee', 'EmployeeController\EmployeeController@updateEmployeeWithNotImage')->middleware('scope:admin');
     Route::post('/register', '_AuthController\RegisterController@register')->middleware('scope:admin');
     Route::delete('/employee/{id}', 'EmployeeController\EmployeeController@deleteEmployeeByID')->middleware('scope:admin');
     Route::get('/employee/{id}', 'EmployeeController\EmployeeController@getEmployeeByID')->middleware('scope:admin');
@@ -83,3 +84,22 @@ Route::group(['middleware' => 'auth:api'], function() {
 Route::post('/login', '_AuthController\LoginController@login');
 
 
+
+//--- Forgot and reset
+
+Route::post('/forgot', '_AuthController\ForgotController@forgot');
+Route::post('/reset', '_AuthController\ForgotController@reset');
+//---Mail test
+
+Route::post('/mail', function (Request $request) {
+    try {
+        $details = [
+            'title' => $request->title,
+            'body' => $request->body
+        ];
+        \Mail::to('vntya002@gmail.com')->send(new \App\Mail\SendMail($details));
+        return response()->json(['status' => 'successful']);
+    } catch (\Exception $e) {
+        return response($e->getMessage(), 422);
+    }
+});

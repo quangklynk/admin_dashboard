@@ -34,6 +34,17 @@ class EmployeeController extends Controller
                                     'messege' => 'Empty Element']);
     }
 
+    public function updateEmployeeWithNotImage(Request $request) {
+        try {
+            Employee::where('id', $request->id)
+                ->update(['name' => $request->name,
+                          'address' => $request->address,
+                          'gender' => $request->gender]);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+
     // public function deleteEmployeeByID($id){
     //     try {
     //         DB::table('employees')->where('id', $id)->delete();

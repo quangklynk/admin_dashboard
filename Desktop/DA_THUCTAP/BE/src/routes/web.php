@@ -20,3 +20,18 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+
+Route::get('/mail', function () {
+    try {
+        $details = [
+            'title' => 'Test cho quan',
+            'body' => 'co ni chi qua'
+        ];
+        \Mail::to('vntya002@gmail.com')->send(new \App\Mail\SendMail($details));
+        return response()->json(['status' => 'successful']);
+    } catch (\Exception $e) {
+        return response($e->getMessage(), 422);
+    }
+});

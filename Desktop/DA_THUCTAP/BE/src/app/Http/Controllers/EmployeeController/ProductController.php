@@ -21,12 +21,15 @@ class ProductController extends Controller
 
     public function createProduct(Request $request){
 
+
+        $file = $request->file('imageAvatar[0]')->getClientOriginalName();
         if ($request->imageAvatar) {
-            $file = $request->file('image')->getClientOriginalName();
+            $file = $request->file('imageAvatar')->getClientOriginalName();
             // $filename = pathinfo($file, PATHINFO_FILENAME); đuôi file
             $filenameA = date('Y_m_d_H_i_s');
             $extension = pathinfo($file, PATHINFO_EXTENSION);
             $filename = "SP_A" . $request->name .  $filename . "." . $extension;
+            $path = $request->file('imageAvatar')->move(public_path("/image/employee"), $filename);
         }
 
         try {
@@ -47,6 +50,7 @@ class ProductController extends Controller
                  ],//4 tấm hình
             );
             $product_temp = Product::where('email', $request->email)->first();
+            
             return response()->json(['status' => 'successful',
                                      'messege' => 'Add Product Success']);
         } catch (\Throwable $th) {

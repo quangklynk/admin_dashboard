@@ -20,6 +20,15 @@ class ProductController extends Controller
     }
 
     public function createProduct(Request $request){
+
+        if ($request->imageAvatar) {
+            $file = $request->file('image')->getClientOriginalName();
+            // $filename = pathinfo($file, PATHINFO_FILENAME); đuôi file
+            $filenameA = date('Y_m_d_H_i_s');
+            $extension = pathinfo($file, PATHINFO_EXTENSION);
+            $filename = "SP_A" . $request->name .  $filename . "." . $extension;
+        }
+
         try {
             DB::table('products')->updateOrInsert(
                 ['id' => $request->id],
@@ -30,13 +39,14 @@ class ProductController extends Controller
                     'unit' => $request->unit,
                     'description' => $request->description,
                     'remark' => $request->remark,
-                    'avatar' => $request->avatar,
+                    'avatar' => $request->imgAvatar,
                     'view' => 0,
                     'idCategory' => $request->idCategory,
                     'idDistributor' => $request->idDistributor,
                     'flag' => 1,
-                 ],
+                 ],//4 tấm hình
             );
+            $product_temp = Product::where('email', $request->email)->first();
             return response()->json(['status' => 'successful',
                                      'messege' => 'Add Product Success']);
         } catch (\Throwable $th) {

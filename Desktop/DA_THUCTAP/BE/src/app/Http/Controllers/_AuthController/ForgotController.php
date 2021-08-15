@@ -57,4 +57,5 @@ class ForgotController extends Controller
         
         return response()->json(['mess' => 'Change password successful!']);
     }
+
 }

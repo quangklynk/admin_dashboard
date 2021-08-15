@@ -48,4 +48,25 @@ class RegisterController extends Controller
                                      'error' => $e]);
         }
     }
+
+    public function changepass (Request $request) {
+       
+        $data =  DB::table('employees')
+        ->join('users', 'users.id', '=', 'employees.idUser')
+        ->select('users.id', 'users.password')
+        ->where('employees.id', $request->id)->first();
+
+        if (!$data) {
+            return response()->json(['mess' => 'Unfind Account']);
+        }
+
+        $user = User::where('id', $data->id)->first();
+        if (Hash::check($request->passold, $data->password)) {
+            $user->password = Hash::make($request->passnew);
+            $user->save();
+            return response()->json(['mess' => 'OK']);
+        } else {
+            return response()->json(['mess' =>  'Sai rồi']);
+        }
+    }
 }

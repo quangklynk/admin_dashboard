@@ -9,6 +9,7 @@
 <body>
     <h1>{{$details['title']}}</h1>
     <p>{{$details['body']}}</p>
+    <img src="https://condomviet.com/wp-content/uploads/2021/04/hinh-anh-vu-dep.jpeg" alt="">
     <p>Thank you</p>
 </body>
 </html>

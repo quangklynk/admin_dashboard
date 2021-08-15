@@ -25,7 +25,10 @@ class EmployeeController extends Controller
     }
 
     public function getEmployeeByID($id){
-        $data = Employee::where('id', $id)->first();
+        $data =  DB::table('employees')
+                ->join('users', 'users.id', '=', 'employees.idUser')
+                ->select('employees.id', 'users.email' , 'employees.name','employees.gender', 'employees.address', 'employees.image')
+                ->where('employees.id', $id)->first();
         if($data){
             return response()->json(['status' => 'nhân viên nè',
                                     'data' => $data]);
@@ -40,8 +43,28 @@ class EmployeeController extends Controller
                 ->update(['name' => $request->name,
                           'address' => $request->address,
                           'gender' => $request->gender]);
+             return response()->json(['status' => 'successful']);
         } catch (\Throwable $th) {
-            //throw $th;
+            return response()->json(['status' => 'failed',
+                                     'error' => $th]);
+        }
+    }
+
+
+    public function updateEmployeeWithImage(Request $request) {
+        $file = $request->file('image')->getClientOriginalName();
+        // $filename = pathinfo($file, PATHINFO_FILENAME); đuôi file
+        $filename = date('Y_m_d_H_i_s');
+        $extension = pathinfo($file, PATHINFO_EXTENSION);
+        $filename = "NV_" . $request->name .  $filename . "." . $extension;
+        try {
+            Employee::where('id', $request->id)
+                ->update(['image' => $filename]);
+            $path = $request->file('image')->move(public_path("/image/employee"), $filename);
+            return response()->json(['status' => 'successful']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'failed',
+                                     'error' => $th]);
         }
     }
 

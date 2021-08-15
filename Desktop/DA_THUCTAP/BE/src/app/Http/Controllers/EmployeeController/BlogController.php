@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\DB;
 class BlogController extends Controller
 {
     public function getBlog (){
-        $data = Blog::all();
-        //$data = Unit::with(['floor:id,numFloor', 'unitType:id,description', 'block:id,description'])->get();
-        $data = DB::table('blogs')
-        ->join('employees', 'blogs.idEmployee', '=', 'employees.id')
-        ->select('blogs.id', 'blogs.image', 'employees.name as idEmployee', 'blogs.titleBlog', 'blogs.content')
-        ->get();
+        // $data = Blog::all();
+        $data = Blog::with(['employee:id,name'])->get();
+        // $data = DB::table('blogs')
+        // ->join('employees', 'blogs.idEmployee', '=', 'employees.id')
+        // ->select('blogs.id', 'blogs.image', 'employees.name as idEmployee', 'blogs.titleBlog', 'blogs.content', 'blogs.created_at')
+        // ->get();
         if($data){
             return response()->json(['status' => 'successful',
                                     'data' => $data]);

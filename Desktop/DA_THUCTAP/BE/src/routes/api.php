@@ -76,6 +76,12 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('/register', '_AuthController\RegisterController@register')->middleware('scope:admin');
     Route::delete('/employee/{id}', 'EmployeeController\EmployeeController@deleteEmployeeByID')->middleware('scope:admin');
     Route::get('/employee/{id}', 'EmployeeController\EmployeeController@getEmployeeByID')->middleware('scope:admin');
+    Route::post('/employee/updateinfo', 'EmployeeController\EmployeeController@updateEmployeeWithNotImage')->middleware('scope:admin');
+    Route::post('/employee/updateimg', 'EmployeeController\EmployeeController@updateEmployeeWithImage')->middleware('scope:admin');
+
+
+    //---ChangePass
+    Route::post('/change', '_AuthController\RegisterController@changepass')->middleware('scope:admin,employee');
 
     //---Logout
     Route::post('/logout', '_AuthController\LoginController@logout');
@@ -97,7 +103,7 @@ Route::post('/mail', function (Request $request) {
             'title' => $request->title,
             'body' => $request->body
         ];
-        \Mail::to('vntya002@gmail.com')->send(new \App\Mail\SendMail($details));
+        \Mail::to('n17dccn136@student.ptithcm.edu.vn')->send(new \App\Mail\SendMail($details));
         return response()->json(['status' => 'successful']);
     } catch (\Exception $e) {
         return response($e->getMessage(), 422);

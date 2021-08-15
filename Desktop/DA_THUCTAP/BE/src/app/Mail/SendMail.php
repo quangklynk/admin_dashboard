@@ -30,6 +30,6 @@ class SendMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Mail from QUANG "10 ngón"!')->view('mail.form-mail');
+        return $this->subject('Danh sách các học sinh cấm học môn thay thế HKI năm 2022-2023')->view('mail.form-mail');
     }
 }

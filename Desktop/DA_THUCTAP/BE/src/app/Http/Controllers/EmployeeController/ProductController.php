@@ -65,7 +65,6 @@ class ProductController extends Controller
                     ]);
                 }
             }
->>>>>>> f0f3937d09a6139a0b3532e1b799e217c2283d66
             return response()->json(['status' => 'successful',
                                      'messege' => 'Add Product Success']);
         } catch (\Throwable $th) {

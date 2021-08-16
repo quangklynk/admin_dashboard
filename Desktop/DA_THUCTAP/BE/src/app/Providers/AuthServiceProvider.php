@@ -30,7 +30,8 @@ class AuthServiceProvider extends ServiceProvider
         
         Passport::tokensCan([
             'admin' => ' Add/Edit/Delete',
-            'employee' => 'employee Add/Edit'
+            'employee' => 'employee Add/Edit',
+            'customer' => 'customer Add/Edit'
         ]);
     
         Passport::setDefaultScope([

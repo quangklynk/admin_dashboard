@@ -30,8 +30,26 @@ class LoginController extends Controller
 
             return response()->json(['data' => $data, 'token' => $user->accessToken]);
         }
+        return response()->json(['email' => 'Sai ten truy cap hoac mat khau!'], 401);
+    }
 
-        
+    public function loginCustomer (Request $request) {
+        if (Auth::attempt([
+            'email' => $request->email,
+            'password' => $request->password
+        ])) {
+            $user = User::where('email', $request->email)->first();
+            $data = DB::table('users')
+            ->join('customers', 'users.id', '=', 'customers.idUser')     
+            ->select('customers.id', 'users.flag', 'customers.name')
+            ->where('users.email', $request->email)
+            ->first();
+
+            $tokenData = $user->createToken($user->email.'-'.now(), [$data->role_name]);
+            $user->accessToken = $tokenData->accessToken;
+
+            return response()->json(['data' => $data, 'token' => $user->accessToken]);
+        }
         return response()->json(['email' => 'Sai ten truy cap hoac mat khau!'], 401);
     }
 

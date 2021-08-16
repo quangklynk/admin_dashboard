@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\DB;
 class ProductController extends Controller
 {
     public function getProduct (){
-        $data = Product::all();
+        // $data = Product::all();
+        $data = Product::with('category:id,name', 'listImage:id,image,idProduct')->get();
         if($data){
             return response()->json(['status' => 'successful',
                                     'data' => $data]);
@@ -22,17 +23,14 @@ class ProductController extends Controller
 
     public function createProduct(Request $request){
 
-
-        $file = $request->file('imageAvatar[0]')->getClientOriginalName();
-        if ($request->imageAvatar) {
-            $file = $request->file('imageAvatar')->getClientOriginalName();
+        if ($request->imgAvatar) {
+            $file = $request->file('imgAvatar')->getClientOriginalName();
             // $filename = pathinfo($file, PATHINFO_FILENAME); đuôi file
             $filenameA = date('Y_m_d_H_i_s');
             $extension = pathinfo($file, PATHINFO_EXTENSION);
-            $filename = "SP_A" . $request->name .  $filename . "." . $extension;
-            $path = $request->file('imageAvatar')->move(public_path("/image/employee"), $filename);
+            $filename = "SP_A"  .  $filenameA . "." . $extension;
         }
-
+        DB::beginTransaction();
         try {
             $pro = Product::updateOrCreate(
                 ['id' => $request->id],
@@ -46,35 +44,77 @@ class ProductController extends Controller
                     'avatar' => $filename,
                     'view' => 0,
                     'idCategory' => $request->idCategory,
-                    'idDistributor' => $request->idDistributor,
                     'flag' => 1,
-                 ],//4 tấm hình
+                 ],
             );
-
-            foreach ($request->list_image_upload as $item) {
-                if (!$item->name) {
-                    $file = $item->file('image')->getClientOriginalName();
-                    // $filename = pathinfo($file, PATHINFO_FILENAME); đuôi file
-                    $filenameA = date('Y_m_d_H_i_s');
-                    $extension = pathinfo($file, PATHINFO_EXTENSION);
-                    $filename = "SP_A" . $request->name .  $filename . "." . $extension;
-
-                    List_Image::create([
-                        'image' => $filename,
-                        'idProduct' => $pro->id
-                    ]);
-                }
+            $request->file('imgAvatar')->move(public_path("/image/product"), $filename);
+            
+            if ($request->img1) {
+                $file = $request->file('img1')->getClientOriginalName();
+                $filename = date('Y_m_d_H_i_s');
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                $filename = "SP_1" . $request->idProduct . $filename . "." . $extension;
+                DB::table('list__images')->insert(
+                            [
+                                'image' => $filename,
+                                'idProduct' => $pro->id
+                            ],
+                );
+                $request->file('img1')->move(public_path("/image/product"), $filename);
             }
+
+            if ($request->img2) {
+                $file = $request->file('img2')->getClientOriginalName();
+                $filename = date('Y_m_d_H_i_s');
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                $filename = "SP_2" . $request->idProduct . $filename . "." . $extension;
+                DB::table('list__images')->insert(
+                            [
+                                'image' => $filename,
+                                'idProduct' => $pro->id
+                            ],
+                );
+                $request->file('img2')->move(public_path("/image/product"), $filename);
+            }
+            if ($request->img3) {
+                $file = $request->file('img3')->getClientOriginalName();
+                $filename = date('Y_m_d_H_i_s');
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                $filename = "SP_3" . $request->idProduct . $filename . "." . $extension;
+                DB::table('list__images')->insert(
+                            [
+                                'image' => $filename,
+                                'idProduct' => $pro->id
+                            ],
+                );
+                $request->file('img3')->move(public_path("/image/product"), $filename);
+            }
+            if ($request->img4) {
+                $file = $request->file('img4')->getClientOriginalName();
+                $filename = date('Y_m_d_H_i_s');
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                $filename = "SP_4" . $request->idProduct . $filename . "." . $extension;
+                DB::table('list__images')->insert(
+                            [
+                                'image' => $filename,
+                                'idProduct' => $pro->id
+                            ],
+                );
+                $request->file('img4')->move(public_path("/image/product"), $filename);
+            }
+            
+            DB::commit();
             return response()->json(['status' => 'successful',
-                                     'messege' => 'Add Product Success']);
-        } catch (\Throwable $th) {
+                                     'messege' => 'ok']);
+        } catch (Exception $th) {
+            DB::rollBack();
             return  response()->json(['status' => 'failed',
-                                    'messege' => 'Add Product Failed']);
+                                    'messege' => $th]);
         }
     }
 
     public function getProductByID($id){
-        $data = Product::where('id', $id)->first();
+        $data = Product::with('category:id,name', 'listImage:id,image,idProduct')->where('id', $id)->first();
         if($data){
             return response()->json(['status' => 'successful',
                                     'data' => $data]);
@@ -83,7 +123,101 @@ class ProductController extends Controller
                                     'messege' => 'Empty Element']);
     }
 
-    public function deleteBlogByID($id){
+    public function updateProductWithNotImage(Request $request, $id) {
+        try {
+            Product::where('id', $id)
+                ->update(['name' => $request->name,
+                          'price' => $request->price,
+                          'discount' => $request->discount,
+                          'unit' => $request->unit,
+                          'description' => $request->description,
+                          'remark' => $request->remark,
+                          'idCategory' => $request->idCategory,
+                        ]);
+             return response()->json(['status' => 'successful']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'failed',
+                                     'error' => $th]);
+        }
+    }
+
+    public function updateProductImage(Request $request){
+
+        if ($request->imgAvatar) {
+            $file = $request->file('imgAvatar')->getClientOriginalName();
+            // $filename = pathinfo($file, PATHINFO_FILENAME); đuôi file
+            $filenameA = date('Y_m_d_H_i_s');
+            $extension = pathinfo($file, PATHINFO_EXTENSION);
+            $filename = "SP_A"  .  $filenameA . "." . $extension;
+        }
+        DB::beginTransaction();
+        try {
+        
+            if ($request->img1) {
+                $file = $request->file('img1')->getClientOriginalName();
+                $filename = date('Y_m_d_H_i_s');
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                $filename = "SP_1" . $request->idProduct . $filename . "." . $extension;
+                DB::table('list__images')->insert(
+                            [
+                                'image' => $filename,
+                                'idProduct' => $pro->id
+                            ],
+                );
+                $request->file('img1')->move(public_path("/image/product"), $filename);
+            }
+
+            if ($request->img2) {
+                $file = $request->file('img2')->getClientOriginalName();
+                $filename = date('Y_m_d_H_i_s');
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                $filename = "SP_2" . $request->idProduct . $filename . "." . $extension;
+                DB::table('list__images')->insert(
+                            [
+                                'image' => $filename,
+                                'idProduct' => $pro->id
+                            ],
+                );
+                $request->file('img2')->move(public_path("/image/product"), $filename);
+            }
+            if ($request->img3) {
+                $file = $request->file('img3')->getClientOriginalName();
+                $filename = date('Y_m_d_H_i_s');
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                $filename = "SP_3" . $request->idProduct . $filename . "." . $extension;
+                DB::table('list__images')->insert(
+                            [
+                                'image' => $filename,
+                                'idProduct' => $pro->id
+                            ],
+                );
+                $request->file('img3')->move(public_path("/image/product"), $filename);
+            }
+            if ($request->img4) {
+                $file = $request->file('img4')->getClientOriginalName();
+                $filename = date('Y_m_d_H_i_s');
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                $filename = "SP_4" . $request->idProduct . $filename . "." . $extension;
+                DB::table('list__images')->insert(
+                            [
+                                'image' => $filename,
+                                'idProduct' => $pro->id
+                            ],
+                );
+                $request->file('img4')->move(public_path("/image/product"), $filename);
+            }
+            
+            DB::commit();
+            return response()->json(['status' => 'successful1',
+                                     'messege' => 'ok']);
+        } catch (Exception $th) {
+            DB::rollBack();
+            return  response()->json(['status' => 'failed',
+                                    'messege' => $th]);
+        }
+    }
+   
+    public function deleteProductByID($id){
         try {
             DB::table('products')
               ->where('id', $id)
@@ -94,4 +228,18 @@ class ProductController extends Controller
                                      'error' => $th]);
         }
     }
+
+    public function backProductByID($id){
+        try {
+            DB::table('products')
+              ->where('id', $id)
+              ->update(['flag' => 1]);
+            return response()->json(['status' => 'successful']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'failed',
+                                     'error' => $th]);
+        }
+    }
+
+    
 }

@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    protected $fillable = [
+        'id', 'name', 'price', 'discount','unit', 'description', 'remark', 'avatar', 'view', 'idCategory', 'flag'
+    ];
+
     public function category() {
         return $this->belongsTo(Category::class, 'idCategory', 'id');
     }

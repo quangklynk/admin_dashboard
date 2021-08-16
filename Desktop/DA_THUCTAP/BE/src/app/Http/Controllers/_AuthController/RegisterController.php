@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
 use App\User;
 use App\Models\Employee;
+use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
@@ -41,6 +42,35 @@ class RegisterController extends Controller
             
             DB::commit();
             $path = $request->file('image')->move(public_path("/image/employee"), $filename);
+            return response()->json(['status' => 'successful']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'failed',
+                                     'error' => $e]);
+        }
+    }
+
+    public function registerCustomer (Request $request) {
+
+        $user = new User;
+        DB::beginTransaction();
+        try { 
+            $user->email = $request->email;
+            $user->flag = 1;
+            $user->idRole = 3;
+            $user->password = Hash::make($request->password);
+            $user->save();
+    
+            $user_temp = User::where('email', $request->email)->first();
+    
+            $customer = new Customer;
+            $customer->name = $request->name;
+            $customer->address = $request->address;
+            $customer->phone = $request->phone;
+            $customer->idUser = $user_temp->id;
+            $customer->save();
+            
+            DB::commit();
             return response()->json(['status' => 'successful']);
         } catch (Exception $e) {
             DB::rollBack();

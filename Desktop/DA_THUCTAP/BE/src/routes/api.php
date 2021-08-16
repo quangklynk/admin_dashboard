@@ -30,7 +30,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     //---Category 
     Route::get('/category', 'EmployeeController\CategoryController@getCategory');
-    Route::post('/category', 'EmployeeController\CategoryController@createCategory');
+    Route::post('/category', 'EmployeeController\CategoryController@createCategory')->middleware('scope:admin');
     Route::get('/category/{id}', 'EmployeeController\CategoryController@getCategoryByID');
     Route::delete('/category/{id}', 'EmployeeController\CategoryController@deleteCategoryByID');
 
@@ -47,10 +47,13 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::delete('/list_image/{id}', 'EmployeeController\List_ImageController@deleteList_ImageByID');
 
     //---Product 
-    Route::get('/list-product', 'EmployeeController\ProductController@getProduct');
-    Route::post('/list-product', 'EmployeeController\ProductController@createProduct');
+    Route::get('/product', 'EmployeeController\ProductController@getProduct');
+    Route::post('/product', 'EmployeeController\ProductController@createProduct');
     Route::get('/product/{id}', 'EmployeeController\ProductController@getProductByID');
-    Route::delete('/product/{id}', 'EmployeeController\ProductController@deleteBlogByID');
+    Route::delete('/product/{id}', 'EmployeeController\ProductController@deleteProductByID');
+    Route::post('/product/{id}', 'EmployeeController\ProductController@backProductByID');
+    Route::post('/product/a', 'EmployeeController\ProductController@updateProductImage');
+    Route::patch('/product/updateinfo/{id}', 'EmployeeController\ProductController@updateProductWithNotImage');
 
     //---Status 
     Route::get('/status', 'EmployeeController\StatusController@getStatus');
@@ -87,16 +90,17 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('/logout', '_AuthController\LoginController@logout');
 });
 
+//---Login Employee
 Route::post('/login', '_AuthController\LoginController@login');
 
-
+//---Login Customer
+Route::post('/login/customer', '_AuthController\LoginController@loginCustomer');
+Route::post('/register/customer', '_AuthController\RegisterController@registerCustomer');
 
 //--- Forgot and reset
-
 Route::post('/forgot', '_AuthController\ForgotController@forgot');
 Route::post('/reset', '_AuthController\ForgotController@reset');
 //---Mail test
-
 Route::post('/mail', function (Request $request) {
     try {
         $details = [

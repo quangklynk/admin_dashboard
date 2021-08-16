@@ -31,6 +31,7 @@ class CategoryController extends Controller
                     'name' => $request->name,
                     'idManufacturers' => $request->idManufacturers,
                     'idDistributor' => $request->idDistributor,
+                    'flag' => '1'
                  ],
             );
             return response()->json(['status' => 'successful',

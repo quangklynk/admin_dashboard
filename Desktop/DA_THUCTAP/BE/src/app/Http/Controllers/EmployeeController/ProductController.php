@@ -141,6 +141,8 @@ class ProductController extends Controller
         }
     }
 
+
+    // gửi 1-> 5 tấm hình, kt request, tạo chỉ tạo 1 cái avatar theo product, sửa thêm hình list_image
     public function updateProductImage(Request $request){
 
         if ($request->imgAvatar) {

@@ -40,8 +40,9 @@ class LoginController extends Controller
         ])) {
             $user = User::where('email', $request->email)->first();
             $data = DB::table('users')
-            ->join('customers', 'users.id', '=', 'customers.idUser')     
-            ->select('customers.id', 'users.flag', 'customers.name')
+            ->join('customers', 'users.id', '=', 'customers.idUser')  
+            ->join('roles', 'roles.id', '=', 'users.idRole')   
+            ->select('customers.id', 'users.flag', 'customers.name', 'roles.role_name')
             ->where('users.email', $request->email)
             ->first();
 

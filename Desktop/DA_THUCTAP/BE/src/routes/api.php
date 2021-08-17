@@ -52,7 +52,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('/product/{id}', 'EmployeeController\ProductController@getProductByID');
     Route::delete('/product/{id}', 'EmployeeController\ProductController@deleteProductByID');
     Route::post('/product/{id}', 'EmployeeController\ProductController@backProductByID');
-    Route::post('/product/a', 'EmployeeController\ProductController@updateProductImage');
+    Route::post('/product/updateimage/v1', 'TestController@updateProductImage');
     Route::patch('/product/updateinfo/{id}', 'EmployeeController\ProductController@updateProductWithNotImage');
 
     //---Status 
@@ -89,6 +89,8 @@ Route::group(['middleware' => 'auth:api'], function() {
     //---Logout
     Route::post('/logout', '_AuthController\LoginController@logout');
 });
+
+
 
 //---Login Employee
 Route::post('/login', '_AuthController\LoginController@login');

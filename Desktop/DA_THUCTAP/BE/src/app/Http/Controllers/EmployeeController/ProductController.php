@@ -256,5 +256,40 @@ class ProductController extends Controller
         }
     }
 
+
+
+    public function sreachByCate(Request $request) {
+        //request: idCate
+        $cate = $request->idCate;
+
+        $data = Product::with('category:id,name', 'listImage:id,image,idProduct')->where('idCategory', $cate)->get();
+        if($data){
+            return response()->json(['status' => 'successful',
+                                    'data' => $data]);
+        }
+        return  response()->json(['status' => 'failed',
+                                    'messege' => 'Empty List']);
+    }
+
+    public function sreachByPrice(Request $request) {
+        $data = Product::with('category:id,name', 'listImage:id,image,idProduct')->where('price','>=', $request->from)->where('price', '<=', $request->to)->get();
+        if($data){
+            return response()->json(['status' => 'successful',
+                                    'data' => $data]);
+        }
+        return  response()->json(['status' => 'failed',
+                                    'messege' => 'Empty List']);
+    }
+
+    public function sreachByName(Request $request) { // có thể thêm mới, tinh chỉnh sau, 
+        $data = Product::with('category:id,name', 'listImage:id,image,idProduct')->where('name','like', $request->name)->get();
+        if($data){
+            return response()->json(['status' => 'successful',
+                                    'data' => $data]);
+        }
+        return  response()->json(['status' => 'failed',
+                                    'messege' => 'Empty List']);
+    }
+
     
 }

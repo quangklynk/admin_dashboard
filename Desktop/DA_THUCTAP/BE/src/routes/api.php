@@ -54,6 +54,8 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('/product/{id}', 'EmployeeController\ProductController@backProductByID');
     Route::post('/product/updateimage/v1', 'TestController@updateProductImage');
     Route::patch('/product/updateinfo/{id}', 'EmployeeController\ProductController@updateProductWithNotImage');
+    //------sreach
+    
 
     //---Status 
     Route::get('/status', 'EmployeeController\StatusController@getStatus');

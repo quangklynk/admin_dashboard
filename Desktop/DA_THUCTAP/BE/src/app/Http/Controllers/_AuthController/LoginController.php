@@ -30,7 +30,7 @@ class LoginController extends Controller
 
             return response()->json(['data' => $data, 'token' => $user->accessToken]);
         }
-        return response()->json(['email' => 'Sai ten truy cap hoac mat khau!'], 401);
+        return response()->json(['email' => 'Sai ten truy cap hoac mat khau!']);
     }
 
     public function loginCustomer (Request $request) {
@@ -51,7 +51,7 @@ class LoginController extends Controller
 
             return response()->json(['data' => $data, 'token' => $user->accessToken]);
         }
-        return response()->json(['email' => 'Sai ten truy cap hoac mat khau!'], 401);
+        return response()->json(['email' => 'Sai ten truy cap hoac mat khau!']);
     }
 
     public function logout (Request $request) {
@@ -60,4 +60,4 @@ class LoginController extends Controller
             'message' => 'Successfully logged out'
         ]);
     }
-}//trả về quyền tên idnhân viên
+}

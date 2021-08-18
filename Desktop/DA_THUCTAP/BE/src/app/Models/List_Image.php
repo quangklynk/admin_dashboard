@@ -11,6 +11,10 @@ class List_Image extends Model
     }
 
     protected $fillable = [
-        'id', 'image', 'idProduct'
+        'id', 'image', 'idProduct', 'updated_at'
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
     ];
 }

@@ -34,8 +34,8 @@ class AuthServiceProvider extends ServiceProvider
             'customer' => 'customer Add/Edit'
         ]);
     
-        Passport::setDefaultScope([
-            'employee'
-        ]);
+        // Passport::setDefaultScope([
+        //     'employee'
+        // ]);
     }
 }

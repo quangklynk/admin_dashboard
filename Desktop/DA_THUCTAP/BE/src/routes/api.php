@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth:api'], function() {
 
-    //---Block
-    Route::get('/blog', 'EmployeeController\BlogController@getBlog');
+    //---Blog
+    Route::get('/blog', 'EmployeeController\BlogController@getBlog')->middleware('scope:employee,customer');
     Route::post('/blog', 'EmployeeController\BlogController@createBlog');
     Route::get('/blog/{id}', 'EmployeeController\BlogController@getBlogByID');
     Route::delete('/blog/{id}', 'EmployeeController\BlogController@deleteBlogByID');
@@ -58,10 +58,10 @@ Route::group(['middleware' => 'auth:api'], function() {
     
 
     //---Status 
-    Route::get('/status', 'EmployeeController\StatusController@getStatus');
-    Route::post('/status', 'EmployeeController\StatusController@createStatus');
-    Route::get('/status/{id}', 'EmployeeController\StatusController@getStatusByID');
-    Route::delete('/status/{id}', 'EmployeeController\StatusController@deleteStatusByID');
+    Route::get('/status', 'EmployeeController\StatusController@getStatus')->middleware('scope:admin');
+    Route::post('/status', 'EmployeeController\StatusController@createStatus')->middleware('scope:admin');
+    Route::get('/status/{id}', 'EmployeeController\StatusController@getStatusByID')->middleware('scope:admin');
+    Route::delete('/status/{id}', 'EmployeeController\StatusController@deleteStatusByID')->middleware('scope:admin');
 
     //---Manufacturer 
     Route::get('/manufacturer', 'EmployeeController\ManufacturerController@getManufacturer')->middleware('scope:admin');
@@ -86,10 +86,21 @@ Route::group(['middleware' => 'auth:api'], function() {
 
 
     //---ChangePass
-    Route::post('/change', '_AuthController\RegisterController@changepass')->middleware('scope:admin,employee');
+    Route::post('/change', '_AuthController\RegisterController@changepass');
+    Route::post('/change/customer', '_AuthController\RegisterController@changepassCusomter')->middleware('scope:customer');
 
     //---Logout
     Route::post('/logout', '_AuthController\LoginController@logout');
+
+
+    // ---------------------------------------------------------------------------------------------------------
+
+    // -------API Customer
+
+    Route::get('/customer/{id}', 'CustomerController\CustomerController@getCustomerByID')->middleware('scope:customer');
+    Route::post('/customer/updateinfo', 'CustomerController\CustomerController@updateCustomerWithNotImage')->middleware('scope:customer');
+    Route::post('/customer/updateimg', 'CustomerController\CustomerController@updateCustomerWithImage')->middleware('scope:customer');
+
 });
 
 

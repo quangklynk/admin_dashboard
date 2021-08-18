@@ -289,7 +289,5 @@ class ProductController extends Controller
         }
         return  response()->json(['status' => 'failed',
                                     'messege' => 'Empty List']);
-    }
-
-    
+    }   
 }

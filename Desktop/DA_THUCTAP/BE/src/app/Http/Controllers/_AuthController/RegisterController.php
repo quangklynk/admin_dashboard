@@ -99,4 +99,25 @@ class RegisterController extends Controller
             return response()->json(['mess' =>  'Sai rồi']);
         }
     }
+
+    public function changepassCusomter (Request $request) {
+       
+        $data =  DB::table('customers')
+        ->join('users', 'users.id', '=', 'customers.idUser')
+        ->select('users.id', 'users.password')
+        ->where('customers.id', $request->id)->first();
+
+        if (!$data) {
+            return response()->json(['mess' => 'Unfind Account']);
+        }
+
+        $user = User::where('id', $data->id)->first();
+        if (Hash::check($request->passold, $data->password)) {
+            $user->password = Hash::make($request->passnew);
+            $user->save();
+            return response()->json(['mess' => 'OK']);
+        } else {
+            return response()->json(['mess' =>  'Sai rồi']);
+        }
+    }
 }

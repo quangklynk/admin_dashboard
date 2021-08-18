@@ -5,6 +5,7 @@ namespace App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use App\Models\Cart;
 use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
@@ -48,9 +49,41 @@ class CustomerController extends Controller
                 ->update(['image' => $filename]);
             $path = $request->file('image')->move(public_path("/image/customer"), $filename);
             return response()->json(['status' => 'successful']);
-        } catch (Exception $th) {
+        } catch (Exception $e) {
             return response()->json(['status' => 'failed',
-                                     'error' => $th]);
+                                     'error' => $e]);
+        }
+    }
+
+    public function addToCart(Request $request) {
+        try {
+            Cart::updateOrCreate(
+                [
+                    'idCustomer' => $request->idCustomer,
+                    'idProduct' =>$request->idProduct
+                ],
+                [
+                    'unit' => $request->unit,
+                ],
+            );
+            return response()->json(['status' => 'successful']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'failed',
+                                     'error' => $e]);
+        }
+    }
+
+    public function showCart($id) {
+        try {
+            $data = DB::table('carts')
+                ->join('products', 'carts.idProduct', '=', 'products.id')
+                ->select('products.name', 'products.price', 'carts.unit')
+                ->where('carts.idCustomer', $id)
+                ->get();
+            return response()->json(['status' => 'successful']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'failed',
+                                     'error' => $e]);
         }
     }
 

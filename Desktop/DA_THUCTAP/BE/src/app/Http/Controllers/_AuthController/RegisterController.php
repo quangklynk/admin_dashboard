@@ -120,4 +120,17 @@ class RegisterController extends Controller
             return response()->json(['mess' =>  'Sai rồi']);
         }
     }
+
+    public function backAccountByID($id){
+        try {
+            DB::table('users')
+            ->where('email', $id)
+            ->update(['flag' => 1]);
+            return response()->json(['status' => 'successful']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'failed',
+                                     'error' => $th]);
+        }
+    }
+
 }

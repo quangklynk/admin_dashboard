@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth:api'], function() {
 
     //---Blog
-    Route::get('/blog', 'EmployeeController\BlogController@getBlog')->middleware('scope:employee,customer');
+    Route::get('/blog', 'EmployeeController\BlogController@getBlog')->middleware('scope:employee,customer,admincd');
     Route::post('/blog', 'EmployeeController\BlogController@createBlog');
     Route::get('/blog/{id}', 'EmployeeController\BlogController@getBlogByID');
     Route::delete('/blog/{id}', 'EmployeeController\BlogController@deleteBlogByID');
@@ -85,6 +85,12 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('/employee/updateimg', 'EmployeeController\EmployeeController@updateEmployeeWithImage')->middleware('scope:admin');
 
 
+    // ---Customer for Admin
+    Route::get('/customer', 'CustomerController\CustomerController@getCustomer')->middleware('scope:admin');
+    Route::delete('/customer/v1/delete/{id}', 'CustomerController\CustomerController@deleteCustomerByID')->middleware('scope:admin');
+    Route::post('/customer/v1/back/{id}', '_AuthController\RegisterController@backAccountByID')->middleware('scope:admin');
+
+
     //---ChangePass
     Route::post('/change', '_AuthController\RegisterController@changepass');
     Route::post('/change/customer', '_AuthController\RegisterController@changepassCusomter')->middleware('scope:customer');
@@ -103,7 +109,8 @@ Route::group(['middleware' => 'auth:api'], function() {
 
 });
 
-
+Route::get('/category/v1/customer', 'EmployeeController\CategoryController@getCategory');
+Route::get('/product/v1/customer/{id}', 'EmployeeController\ProductController@getProductByIDForCustomer');
 
 //---Login Employee
 Route::post('/login', '_AuthController\LoginController@login');
@@ -119,10 +126,11 @@ Route::post('/reset', '_AuthController\ForgotController@reset');
 Route::post('/mail', function (Request $request) {
     try {
         $details = [
-            'title' => $request->title,
-            'body' => $request->body
+            'name' => $request->name,
+            'email' =>  $request->email,
+            'content' => $request->content
         ];
-        \Mail::to('n17dccn136@student.ptithcm.edu.vn')->send(new \App\Mail\SendMail($details));
+        \Mail::to('quangklynh@gmail.com')->send(new \App\Mail\SendMailContract($details));
         return response()->json(['status' => 'successful']);
     } catch (\Exception $e) {
         return response($e->getMessage(), 422);

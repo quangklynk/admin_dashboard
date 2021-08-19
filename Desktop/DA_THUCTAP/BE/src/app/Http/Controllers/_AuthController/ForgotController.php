@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class ForgotController extends Controller
 {
-    public function forgot (ForgotRequest $request) {
+    public function forgot (Request $request) {
         $email = $request->email;
         $length = 10;
 
@@ -34,22 +34,22 @@ class ForgotController extends Controller
             \Mail::to($email)->send(new \App\Mail\SendMail($details));
 
             return response()->json(['mess' => 'Check your email!',
-                                     'tokenFARP' => $tokenFARP]);
+                                     'token' => $tokenFARP]);
         } catch (\Exception $e) {
             return response($e->getMessage(), 422);
         }
 
     }
 
-    public function reset (ResetRequest $request) {
-        $token = $request->tokenFARP;
+    public function reset (Request $request) {
+        $token = $request->token;
 
         if (!$passwordResets = DB::table('password_resets')->where('token', $token)->first()) {
             return response()->json(['mess' => 'Invalid token!']);
         }
 
         if(!$user = User::where('email', $passwordResets->email)->first()) {
-            return response()->json(['mess' => 'Employee dont exists!']);
+            return response()->json(['mess' => 'User dont exists!']);
         }
 
         $user->password = Hash::make($request->password);

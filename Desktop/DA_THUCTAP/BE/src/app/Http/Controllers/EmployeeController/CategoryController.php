@@ -23,6 +23,20 @@ class CategoryController extends Controller
                                     'messege' => 'Empty List']);
     }
 
+    public function getCategory1 (){
+        $data = DB::table('categories')
+            ->join('distributors', 'distributors.id', '=', 'categories.idDistributor')
+            ->join('manufacturers', 'manufacturers.id', '=', 'categories.idManufacturers')        
+            ->select('categories.id', 'categories.name', 'manufacturers.name as idManufacturers', 'distributors.name as idDistributor')
+            ->get();
+        if($data){
+            return response()->json(['status' => 'successful',
+                                    'data' => $data]);
+        }
+        return  response()->json(['status' => 'failed',
+                                    'messege' => 'Empty List']);
+    }
+
     public function createCategory(Request $request){
         try {
             DB::table('categories')->updateOrInsert(

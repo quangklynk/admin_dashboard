@@ -10,6 +10,21 @@ use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
+
+    public function getCustomer (){
+        // $data = Customer::all();
+        $data = DB::table('customers')
+            ->join('users', 'users.id', '=', 'customers.idUser')   
+            ->select('customers.id', 'users.email' ,'users.flag', 'customers.name', 'customers.address', 'customers.phone', 'customers.image')
+            ->get();
+        if($data){
+            return response()->json(['status' => 'successful',
+                                    'data' => $data]);
+        }
+        return  response()->json(['status' => 'failed',
+                                    'messege' => 'Empty List']);
+    }
+
     public function getCustomerByID($id){
         $data =  DB::table('customers')
                 ->join('users', 'users.id', '=', 'customers.idUser')
@@ -88,5 +103,16 @@ class CustomerController extends Controller
     }
 
     
+    public function deleteCustomerByID($id){
+        try {
+            DB::table('users')
+              ->where('email', $id)
+              ->update(['flag' => 0]);
+            return response()->json(['status' => 'successful']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'failed',
+                                     'error' => $th]);
+        }
+    }
 
 }

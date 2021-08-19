@@ -17,4 +17,8 @@ class Product extends Model
     public function listImage(){
         return $this->hasMany(List_Image::class, 'idProduct', 'id');
     }
+
+    public function rate(){
+        return $this->hasMany(Rate::class, 'idProduct', 'id');
+    }
 }

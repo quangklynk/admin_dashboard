@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Rate extends Model
 {
-    //
+    public function product() {
+        return $this->belongsTo(Product::class, 'idProduct', 'id');
+    }
 }

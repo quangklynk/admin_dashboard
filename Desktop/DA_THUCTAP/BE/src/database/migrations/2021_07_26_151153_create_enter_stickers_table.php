@@ -17,6 +17,7 @@ class CreateEnterStickersTable extends Migration
             $table->increments('id');
             $table->date('dateAdd');
             $table->unsignedInteger('idEmployee');
+            $table->timestamps();
         });
         Schema::table('enter_stickers', function (Blueprint $table) {
             $table->foreign('idEmployee')->references('id')->on('employees')->onDelete('cascade');

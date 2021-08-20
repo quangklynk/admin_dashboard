@@ -18,27 +18,27 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     //---Blog
     Route::get('/blog', 'EmployeeController\BlogController@getBlog')->middleware('scope:employee,customer,admincd');
-    Route::post('/blog', 'EmployeeController\BlogController@createBlog');
-    Route::get('/blog/{id}', 'EmployeeController\BlogController@getBlogByID');
-    Route::delete('/blog/{id}', 'EmployeeController\BlogController@deleteBlogByID');
+    Route::post('/blog', 'EmployeeController\BlogController@createBlog')->middleware('scope:admin,employee');
+    Route::get('/blog/{id}', 'EmployeeController\BlogController@getBlogByID')->middleware('scope:admin,employee');
+    Route::delete('/blog/{id}', 'EmployeeController\BlogController@deleteBlogByID')->middleware('scope:admin,employee');
 
     //---Slide
-    Route::get('/slide', 'EmployeeController\SlideController@getSlide');
+    Route::get('/slide', 'EmployeeController\SlideController@getSlide')->middleware('scope:admin,employee');
     Route::post('/slide', 'EmployeeController\SlideController@createSlide')->middleware('scope:admin,employee');
-    Route::get('/slide/{id}', 'EmployeeController\SlideController@getSlideByID');
-    Route::delete('/slide/{id}', 'EmployeeController\SlideController@deleteSlideByID');
+    Route::get('/slide/{id}', 'EmployeeController\SlideController@getSlideByID')->middleware('scope:admin,employee');
+    Route::delete('/slide/{id}', 'EmployeeController\SlideController@deleteSlideByID')->middleware('scope:admin,employee');
 
     //---Category 
-    Route::get('/category', 'EmployeeController\CategoryController@getCategory');
+    Route::get('/category', 'EmployeeController\CategoryController@getCategory')->middleware('scope:admin,employee');
     Route::post('/category', 'EmployeeController\CategoryController@createCategory')->middleware('scope:admin');
-    Route::get('/category/{id}', 'EmployeeController\CategoryController@getCategoryByID');
-    Route::delete('/category/{id}', 'EmployeeController\CategoryController@deleteCategoryByID');
+    Route::get('/category/{id}', 'EmployeeController\CategoryController@getCategoryByID')->middleware('scope:admin,employee');
+    Route::delete('/category/{id}', 'EmployeeController\CategoryController@deleteCategoryByID')->middleware('scope:admin');
 
     //---Distributor 
-    Route::get('/distributor', 'EmployeeController\DistributorController@getDistributor');
-    Route::post('/distributor', 'EmployeeController\DistributorController@createDistributor');
-    Route::get('/distributor/{id}', 'EmployeeController\DistributorController@getDistributorByID');
-    Route::delete('/distributor/{id}', 'EmployeeController\DistributorController@deleteBlogByID');
+    Route::get('/distributor', 'EmployeeController\DistributorController@getDistributor')->middleware('scope:admin');
+    Route::post('/distributor', 'EmployeeController\DistributorController@createDistributor')->middleware('scope:admin');
+    Route::get('/distributor/{id}', 'EmployeeController\DistributorController@getDistributorByID')->middleware('scope:admin');
+    Route::delete('/distributor/{id}', 'EmployeeController\DistributorController@deleteBlogByID')->middleware('scope:admin');
 
     //---List_Image 
     Route::get('/list_image', 'EmployeeController\List_ImageController@getList_Image');
@@ -53,21 +53,13 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::delete('/product/{id}', 'EmployeeController\ProductController@deleteProductByID');
     Route::post('/product/{id}', 'EmployeeController\ProductController@backProductByID');
     Route::post('/product/updateimage/v1', 'TestController@updateProductImage');
-    Route::patch('/product/updateinfo/{id}', 'EmployeeController\ProductController@updateProductWithNotImage');
-    //------sreach
-    
+    Route::patch('/product/updateinfo/{id}', 'EmployeeController\ProductController@updateProductWithNotImage');    
 
     //---Status 
     Route::get('/status', 'EmployeeController\StatusController@getStatus')->middleware('scope:admin');
     Route::post('/status', 'EmployeeController\StatusController@createStatus')->middleware('scope:admin');
     Route::get('/status/{id}', 'EmployeeController\StatusController@getStatusByID')->middleware('scope:admin');
     Route::delete('/status/{id}', 'EmployeeController\StatusController@deleteStatusByID')->middleware('scope:admin');
-
-    //---Manufacturer 
-    Route::get('/manufacturer', 'EmployeeController\ManufacturerController@getManufacturer')->middleware('scope:admin');
-    Route::post('/manufacturer', 'EmployeeController\ManufacturerController@createManufacturer')->middleware('scope:admin');
-    Route::get('/manufacturer/{id}', 'EmployeeController\ManufacturerController@getManufacturerByID')->middleware('scope:admin');
-    Route::delete('/manufacturer/{id}', 'EmployeeController\ManufacturerController@deleteManufacturerByID')->middleware('scope:admin');
 
     //---Role 
     Route::get('/role', '_AuthController\RoleController@getRole')->middleware('scope:admin');
@@ -92,7 +84,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 
 
     //---ChangePass
-    Route::post('/change', '_AuthController\RegisterController@changepass');
+    Route::post('/change', '_AuthController\RegisterController@changepass')->middleware('scope:admin,employee');
     Route::post('/change/customer', '_AuthController\RegisterController@changepassCusomter')->middleware('scope:customer');
 
     //---Logout
@@ -111,6 +103,9 @@ Route::group(['middleware' => 'auth:api'], function() {
 
 Route::get('/category/v1/customer', 'EmployeeController\CategoryController@getCategory');
 Route::get('/product/v1/customer/{id}', 'EmployeeController\ProductController@getProductByIDForCustomer');
+//------Search
+Route::get('/customer/search/{id}', 'EmployeeController\ProductController@sreachByCate');
+
 
 //---Login Employee
 Route::post('/login', '_AuthController\LoginController@login');

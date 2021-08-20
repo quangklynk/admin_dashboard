@@ -17,7 +17,7 @@ class CreateListImagesTable extends Migration
             $table->increments('id');
             $table->string('image');
             $table->unsignedInteger('idProduct');
-
+            $table->timestamps();
         });
         Schema::table('list__images', function (Blueprint $table) {
             $table->foreign('idProduct')->references('id')->on('products')->onDelete('cascade');

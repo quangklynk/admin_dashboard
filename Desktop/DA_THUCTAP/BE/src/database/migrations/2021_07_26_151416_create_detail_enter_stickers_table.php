@@ -19,6 +19,7 @@ class CreateDetailEnterStickersTable extends Migration
             $table->integer('unit');
             $table->float('price');
             $table->primary(['idSticker', 'idProduct']);
+            $table->timestamps();
         });
 
         Schema::table('detail_enter_stickers', function (Blueprint $table) {

@@ -178,9 +178,9 @@ class ProductController extends Controller
 
 
 
-    public function sreachByCate(Request $request) {
+    public function sreachByCate($id) {
         //request: idCate
-        $cate = $request->idCate;
+        $cate = $id;
 
         $data = Product::with('category:id,name', 'listImage:id,image,idProduct')->where('idCategory', $cate)->get();
         if($data){

@@ -16,12 +16,10 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->unsignedInteger('idManufacturers');
             $table->unsignedInteger('idDistributor');
             $table->boolean('flag');
         });
         Schema::table('categories', function (Blueprint $table) {
-            $table->foreign('idManufacturers')->references('id')->on('manufacturers')->onDelete('cascade');
             $table->foreign('idDistributor')->references('id')->on('distributors')->onDelete('cascade');
         });
     }

@@ -17,7 +17,7 @@ class CreateDistributorsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('address');
-            $table->string('phone', 13)->change();
+            $table->string('phone', 10)->change();
             $table->string('email');
             $table->boolean('flag');
         });

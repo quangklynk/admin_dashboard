@@ -98,4 +98,38 @@ class TestController extends Controller
                                     'messege' => $th]);
         }
     }
+    public function enterSticker (Request $request) {
+        DB::beginTransaction();
+        try {
+            $date = date("Y/m/d");
+            $sticker = EnterSticker::updateOrCreate([
+                ['id' => $request->id],
+                [
+                    'dateAdd' => $date,
+                    'idEmployee' => $request->idEmployee,
+                ]
+            ]);
+
+            $list1 = $request->list;
+
+            foreach ($list1 as $item) {
+                DetailEnterSticker::updateOrCreate([
+                    [
+                        'idSticker' => $sticker->id,
+                        'idProduct' => $item->idProduct,
+                    ],
+                    [
+                        'unit' => $item->unit,
+                        'price' => $item->price,
+                    ]
+                ]);
+            }
+            DB::commit();
+            return response()->json(['status' => 'successful']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'failed',
+                                     'error' => $e]);
+        }
+    }
 }

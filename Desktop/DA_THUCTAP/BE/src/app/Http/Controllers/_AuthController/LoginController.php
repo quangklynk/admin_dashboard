@@ -5,6 +5,7 @@ namespace App\Http\Controllers\_AuthController;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Models\Employee;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -45,11 +46,17 @@ class LoginController extends Controller
             ->select('customers.id', 'users.flag', 'customers.name', 'roles.role_name')
             ->where('users.email', $request->email)
             ->first();
+            
+            $cart = Cart::where('idCustomer', $data->id)->count();
 
             $tokenData = $user->createToken($user->email.'-'.now(), [$data->role_name]);
             $user->accessToken = $tokenData->accessToken;
 
-            return response()->json(['data' => $data, 'token' => $user->accessToken]);
+            return response()->json([
+                                    'cart' => $cart,
+                                    'data' => $data, 
+                                    'token' => $user->accessToken
+                                    ]);
         }
         return response()->json(['email' => 'Sai ten truy cap hoac mat khau!']);
     }

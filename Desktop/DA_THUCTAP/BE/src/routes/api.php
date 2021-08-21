@@ -17,10 +17,19 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth:api'], function() {
 
     //---Blog
-    Route::get('/blog', 'EmployeeController\BlogController@getBlog')->middleware('scope:employee,customer,admincd');
+    Route::get('/blog', 'EmployeeController\BlogController@getBlog')->middleware('scope:employee,admin');
     Route::post('/blog', 'EmployeeController\BlogController@createBlog')->middleware('scope:admin,employee');
     Route::get('/blog/{id}', 'EmployeeController\BlogController@getBlogByID')->middleware('scope:admin,employee');
     Route::delete('/blog/{id}', 'EmployeeController\BlogController@deleteBlogByID')->middleware('scope:admin,employee');
+
+    // ---Cart
+    Route::get('/cart/v1', 'CustomerController\CartController@getCart')->middleware('scope:customer');
+    Route::post('/cart/v1', 'CustomerController\CustomerController@addToCart')->middleware('scope:customer');
+    Route::get('/cart/v1/{id}', 'CustomerController\CustomerController@showCart')->middleware('scope:customer');
+    Route::delete('/cart/v1/{id}', 'CustomerController\CustomerController@deleteCartCustomerByID')->middleware('scope:customer');
+    Route::post('/cart/v1/row', 'CustomerController\CustomerController@deleteCartByID')->middleware('scope:customer');
+    Route::patch('/cart/v1/update/{id}', 'CustomerController\CustomerController@updateCart')->middleware('scope:customer');
+
 
     //---Slide
     Route::get('/slide', 'EmployeeController\SlideController@getSlide')->middleware('scope:admin,employee');
@@ -54,6 +63,12 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('/product/{id}', 'EmployeeController\ProductController@backProductByID');
     Route::post('/product/updateimage/v1', 'TestController@updateProductImage');
     Route::patch('/product/updateinfo/{id}', 'EmployeeController\ProductController@updateProductWithNotImage');    
+
+    // ---EnterSticker
+    Route::post('/entersticker', 'EmployeeController\EnterStickerController@enterSticker');
+    Route::get('/entersticker', 'EmployeeController\EnterStickerController@getEnterSticker');
+    Route::patch('/entersticker/{id}', 'EmployeeController\EnterStickerController@moveDetailsToProduct');
+    Route::delete('/entersticker/{id}', 'EmployeeController\EnterStickerController@deleteEnterStickerByID');
 
     //---Status 
     Route::get('/status', 'EmployeeController\StatusController@getStatus')->middleware('scope:admin');
@@ -98,9 +113,12 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('/customer/{id}', 'CustomerController\CustomerController@getCustomerByID')->middleware('scope:customer');
     Route::post('/customer/updateinfo', 'CustomerController\CustomerController@updateCustomerWithNotImage')->middleware('scope:customer');
     Route::post('/customer/updateimg', 'CustomerController\CustomerController@updateCustomerWithImage')->middleware('scope:customer');
+    Route::post('/customer/v1/order', 'CustomerController\OrderController@orderCustomer')->middleware('scope:customer');
+    Route::get('/customer/v1/order/{id}', 'CustomerController\OrderController@getOrder')->middleware('scope:customer');
 
 });
 
+Route::get('/blog/v1/customer', 'EmployeeController\BlogController@getBlog');
 Route::get('/category/v1/customer', 'EmployeeController\CategoryController@getCategory');
 Route::get('/product/v1/customer/{id}', 'EmployeeController\ProductController@getProductByIDForCustomer');
 //------Search

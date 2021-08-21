@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\Cart;
+use App\Models\Orders;
+use App\Models\Product;
+use App\Models\Detail_Order;
 use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
@@ -38,7 +41,6 @@ class CustomerController extends Controller
                                     'messege' => 'Empty Element']);
     }
 
-
     public function updateCustomerWithNotImage(Request $request) {
         try {
             Customer::where('id', $request->id)
@@ -51,7 +53,6 @@ class CustomerController extends Controller
                                      'error' => $th]);
         }
     }
-
 
     public function updateCustomerWithImage(Request $request) {
         $file = $request->file('image')->getClientOriginalName();
@@ -70,39 +71,6 @@ class CustomerController extends Controller
         }
     }
 
-    public function addToCart(Request $request) {
-        try {
-            Cart::updateOrCreate(
-                [
-                    'idCustomer' => $request->idCustomer,
-                    'idProduct' =>$request->idProduct
-                ],
-                [
-                    'unit' => $request->unit,
-                ],
-            );
-            return response()->json(['status' => 'successful']);
-        } catch (Exception $e) {
-            return response()->json(['status' => 'failed',
-                                     'error' => $e]);
-        }
-    }
-
-    public function showCart($id) {
-        try {
-            $data = DB::table('carts')
-                ->join('products', 'carts.idProduct', '=', 'products.id')
-                ->select('products.name', 'products.price', 'carts.unit')
-                ->where('carts.idCustomer', $id)
-                ->get();
-            return response()->json(['status' => 'successful']);
-        } catch (Exception $e) {
-            return response()->json(['status' => 'failed',
-                                     'error' => $e]);
-        }
-    }
-
-    
     public function deleteCustomerByID($id){
         try {
             DB::table('users')
@@ -115,4 +83,152 @@ class CustomerController extends Controller
         }
     }
 
+    // ---Cart
+
+    public function addToCart(Request $request) {
+        try {
+            $data = DB::table('carts')
+            ->where('carts.idCustomer', $request->idCustomer)
+            ->where('carts.idProduct', $request->idProduct)
+            ->first();
+
+            if ($data) {
+                Cart::where('carts.idCustomer', $request->idCustomer)
+                     ->where('carts.idProduct', $request->idProduct)
+                     ->update([
+                            'unit' => $data->unit + $request->unit,
+                            ]);
+            } else {    
+                $cart = new Cart;
+                $cart->idCustomer = $request->idCustomer;
+                $cart->idProduct = $request->idProduct;
+                $cart->unit = $request->unit;
+                $cart->save();
+            }
+            return response()->json(['status' => 'successful']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'failed',
+                                     'error' => $e]);
+        }
+    }
+
+    public function showCart($id) {
+        try {
+            $data = DB::table('carts')
+                ->join('products', 'carts.idProduct', '=', 'products.id')
+                ->select('carts.idProduct','products.name', 'products.price', 'carts.unit', 'products.avatar', 'products.unit as max')
+                ->where('carts.idCustomer', $id)
+                ->get();
+            return response()->json(['status' => 'successful11',
+                                    'data' => $data]);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'failed',
+                                     'error' => $e]);
+        }
+    }
+
+    public function updateCart (Request $request, $id) {
+        DB::beginTransaction();
+        try {
+            
+            $list1 = $request->list_cart;
+
+            foreach ($list1 as $item) {
+                Cart::where('carts.idCustomer', $id)
+                     ->where('carts.idProduct', $item['idProduct'])
+                     ->update([
+                            'unit' => $item['unit'],
+                            ]);
+            }
+
+            DB::commit();
+            return response()->json(['status' => 'successful']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'failed',
+                                     'error' => $e]);
+        }
+    }
+
+    public function deleteCartCustomerByID($id){
+        try {
+            DB::table('carts')
+              ->where('idCustomer', $id)
+              ->delete();
+            return response()->json(['status' => 'successful']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'failed',
+                                     'error' => $th]);
+        }
+    }
+
+    public function deleteCartByID(Request $request){
+        try {
+            DB::table('carts')
+              ->where('idCustomer', $request->idCustomer)
+              ->where('idProduct', $request->idProduct)
+              ->delete();
+            return response()->json(['status' => 'successful']);
+        } catch (Exception $th) {
+            return response()->json(['status' => 'failed',
+                                     'error' => $th]);
+        }
+    }
+
+    // --Order
+    public function orderCustomer (Request $request) {
+        DB::beginTransaction();
+        try {
+            $date = date("Y-m-d");
+            $order = Orders::updateOrCreate(
+                ['id' => $request->id],
+                [
+                    'idUser' => $request->idUser,
+                    'idStatus' => '1',
+                    'address' => $request->address,
+                    'note' => ' ',
+                ]
+            );
+          
+            $list1 = $request->list_cart;
+
+            foreach ($list1 as $item) {
+                $temp = Product::where('id', $item['idProduct'])->first();
+                if ($temp->unit - $item['unit'] > 0) {
+                    Product::where('id', $item['idProduct'])->update([
+                        'unit' =>  $temp->unit - $item['unit'],
+                    ]);
+                } else {
+                    DB::rollBack();
+                    return response()->json(['status' => 'failed1',
+                                            'error' => 'Không đủ số lượng']);
+                }
+                
+                Detail_Order::updateOrCreate(
+                    [
+                        'idOrder' => $order->id,
+                        'idProduct' => $item['idProduct'],
+                    ],
+                    [
+                        'unit' => $item['unit'],
+                        'price' => $item['price'],
+                    ]
+                );
+
+                DB::table('carts')
+                ->where('idCustomer', $request->idCustomer)
+                ->where('idProduct', $item['idProduct'])
+                ->delete();
+            }
+
+            DB::commit();
+            return response()->json(['status' => 'lưu ok']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'failed1',
+                                     'error' => $e]);
+        }
+    }
+
+    
 }

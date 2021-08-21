@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class EnterSticker extends Model
 {
+    protected $fillable = [
+        'id', 'dateAdd', 'idEmployee', 'flag'
+    ];
     public function detailEnterSticker(){
         return $this->hasMany(DetailEnterSticker::class, 'idSticker', 'id');
     }

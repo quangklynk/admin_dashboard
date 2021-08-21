@@ -63,12 +63,24 @@ class RegisterController extends Controller
     
             $user_temp = User::where('email', $request->email)->first();
     
-            $customer = new Customer;
-            $customer->name = $request->name;
-            $customer->address = $request->address;
-            $customer->phone = $request->phone;
-            $customer->idUser = $user_temp->id;
-            $customer->save();
+            // $customer = new Customer;
+            // $customer->name = $request->name;
+            // $customer->address = $request->address;
+            // $customer->phone = $request->phone;
+            // $customer->idUser = $user_temp->id;
+            // $customer->save();
+
+            Customer::updateOrCreate(
+                [
+                    'id' => $request->id,
+                ],
+                [
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'address' => $request->address,
+                    'idUser' => $user_temp->id,
+                ]
+            );
             
             DB::commit();
             return response()->json(['status' => 'successful']);

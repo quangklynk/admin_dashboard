@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddcolToTable extends Migration
+class Adde extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddcolToTable extends Migration
      */
     public function up()
     {
-        Schema::table('list__images', function (Blueprint $table) {
-            $table->timestamps();
+        Schema::table('enter_stickers', function (Blueprint $table) {
+            //
+            $table->boolean('flag');
         });
     }
 
@@ -25,7 +26,7 @@ class AddcolToTable extends Migration
      */
     public function down()
     {
-        Schema::table('list__images', function (Blueprint $table) {
+        Schema::table('enter_stickers', function (Blueprint $table) {
             //
         });
     }

@@ -1,5 +1,0 @@
-{
-    "database-client.showTrigger": true,
-    "database-client.highlightSQLBlock": true,
-    "git.ignoreLimitWarning": true
-}

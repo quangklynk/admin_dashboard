@@ -84,4 +84,11 @@ class OrderController extends Controller
         return  response()->json(['status' => 'failed',
                                     'messege' => 'Empty List']);
     }
+
+    // làm ở đây nha
+    public function cancelOrder($id)
+    {   //id = idOrder
+        # code...
+        // idStatus -> 3
+    }
 }

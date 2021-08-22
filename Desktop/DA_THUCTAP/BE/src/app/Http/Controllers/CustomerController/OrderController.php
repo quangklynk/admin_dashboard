@@ -90,5 +90,26 @@ class OrderController extends Controller
     {   //id = idOrder
         # code...
         // idStatus -> 3
+        DB::beginTransaction();
+        try {
+
+            $od = Orders::where('id', $id)->update(['idStatus' => 3]);
+            $d_od = Detail_Order::where('idOrder', $id)->get();
+
+            foreach ($d_od as  $item) {
+                $pro = Product::where('id', $item->idProduct)->first();
+                $pro->unit = (int)$pro->unit + (int)$item->unit;
+                $pro->save();
+            }
+
+
+            DB::commit();
+            return response()->json(['status' => 'lưu ok']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'failed1',
+                                     'error' => $e]);
+        }
+
+
     }
 }

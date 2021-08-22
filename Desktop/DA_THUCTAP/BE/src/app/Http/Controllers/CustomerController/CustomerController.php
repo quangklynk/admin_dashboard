@@ -9,6 +9,7 @@ use App\Models\Cart;
 use App\Models\Orders;
 use App\Models\Product;
 use App\Models\Detail_Order;
+use App\Models\Rate;
 use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
@@ -233,6 +234,24 @@ class CustomerController extends Controller
     // --Rating idOrder, idCustomer, vote
     public function ratingCustomer (Request $request)
     {
-        # code...
+        DB::beginTransaction();
+        try {
+            $d_order = Detail_Order::where('idOrder', $request->idOrder)->get();
+            foreach ($d_order as $item) {
+                Rate::create([
+                    'idOrder' => $d_order->idOrder,
+                    'idProduct' => $d_order->idProduct,
+                    'idCustomer' => $d_order->idCustomer,
+                    'vote' => $d_order->vote,
+                ]);
+            }
+
+            DB::commit();
+            return response()->json(['status' => 'successful']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'failed1',
+                                     'error' => $e]);
+        }
     }
 }

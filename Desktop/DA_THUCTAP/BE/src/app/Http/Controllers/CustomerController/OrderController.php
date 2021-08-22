@@ -93,7 +93,14 @@ class OrderController extends Controller
         DB::beginTransaction();
         try {
 
-            $od = Orders::where('id', $id)->update(['idStatus' => 3]);
+            if (!$od = Orders::where(['id' => $id, 
+                            'idStatus' => 1])
+                ->update(['idStatus' => 4])) 
+            {
+            DB::rollBack();
+             return response()->json(['status' => 'faile',
+                                     'error' => 'sai òi']);
+            }
             $d_od = Detail_Order::where('idOrder', $id)->get();
 
             foreach ($d_od as  $item) {
@@ -101,11 +108,10 @@ class OrderController extends Controller
                 $pro->unit = (int)$pro->unit + (int)$item->unit;
                 $pro->save();
             }
-
-
             DB::commit();
             return response()->json(['status' => 'lưu ok']);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['status' => 'failed1',
                                      'error' => $e]);
         }

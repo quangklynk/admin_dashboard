@@ -64,6 +64,11 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('/product/updateimage/v1', 'TestController@updateProductImage');
     Route::patch('/product/updateinfo/{id}', 'EmployeeController\ProductController@updateProductWithNotImage');    
 
+    // ---Order
+    Route::get('/order', 'EmployeeController\OrderController@getAllOrder')->middleware('scope:admin,employee');
+    Route::get('/order/confirm/{id}', 'EmployeeController\OrderController@confirmOrder')->middleware('scope:admin,employee');
+    Route::get('/order/complete/{id}', 'EmployeeController\OrderController@completeOrder')->middleware('scope:admin,employee');
+
     // ---EnterSticker
     Route::post('/entersticker', 'EmployeeController\EnterStickerController@enterSticker');
     Route::get('/entersticker', 'EmployeeController\EnterStickerController@getEnterSticker');
@@ -115,6 +120,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('/customer/updateimg', 'CustomerController\CustomerController@updateCustomerWithImage')->middleware('scope:customer');
     Route::post('/customer/v1/order', 'CustomerController\OrderController@orderCustomer')->middleware('scope:customer');
     Route::get('/customer/v1/order/{id}', 'CustomerController\OrderController@getOrder')->middleware('scope:customer');
+    Route::get('/customer/v1/order/cancel/{id}', 'CustomerController\OrderController@cancelOrder')->middleware('scope:customer');
 
 });
 

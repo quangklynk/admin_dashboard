@@ -230,5 +230,9 @@ class CustomerController extends Controller
         }
     }
 
-    
+    // --Rating idOrder, idCustomer, vote
+    public function ratingCustomer (Request $request)
+    {
+        # code...
+    }
 }

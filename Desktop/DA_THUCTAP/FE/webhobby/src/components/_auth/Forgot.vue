@@ -1,0 +1,129 @@
+<template>
+  <div class="wrapp-form">
+    <form @submit.prevent="submitForgot" action="">
+      <div class="item-form">
+        <h1>Quên Mật Khẩu</h1>
+      </div>
+      <div class="item-form">
+        <i class="fas fa-envelope"></i>
+        <input
+          name="email"
+          type="email"
+          placeholder="Nhập email"
+          v-model="form.email"
+        />
+      </div>
+      <div class="item-form">
+        <button class="btn" type="submit" id="btn-login">
+          Gửi
+        </button>
+      </div>
+      <div class="item-form">
+        <a href="#" class="forgot-pass" @click="login">Đăng nhập</a>
+      </div>
+    </form>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+export default {
+  name: "Forgot",
+  data() {
+    return {
+      form: {
+        email: "",
+      },
+    };
+  },
+  methods: {
+    login() {
+      this.$router.push({ path: "/" });
+    },
+    submitForgot() {
+      if (this.form.email === "") {
+        this.$message({
+          message: "Cảnh báo, Nhập email.",
+          type: "warning",
+        });
+        return;
+      }
+      axios
+        .post("/forgot", this.form)
+        .then((result) => {
+          this.$swal({
+            icon: "success",
+            title: "Kiểm tra Email!!!",
+            showConfirmButton: false,
+          });
+          localStorage.setItem("token", result.data.token);
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: "error",
+            title: "Lỗi!!!",
+            text: `${err}`,
+            showConfirmButton: false,
+          });
+        });
+    },
+  },
+};
+</script>
+
+<style scoped>
+.wrapp-form {
+  width: 400px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  height: fit-content;
+  align-self: center;
+}
+
+form .item-form {
+  width: 100%;
+  padding: 10px 30px;
+  position: relative;
+}
+form .item-form input,
+form .item-form textarea {
+  width: 100%;
+  padding: 12px 10px;
+  padding-left: 40px;
+  display: inline-block;
+  border: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+  cursor: text;
+  outline: none;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #495057;
+  background-color: #cccc;
+  background-clip: padding-box;
+}
+form .item-form .btn {
+  background-color: #30698c;
+  color: white;
+  height: 50px;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 10px;
+  text-align: center;
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+}
+
+form .item-form .btn:hover {
+  opacity: 0.8;
+}
+
+.item-form i {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 42px;
+}
+</style>
